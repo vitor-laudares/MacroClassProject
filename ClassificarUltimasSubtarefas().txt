@@ -1,0 +1,40 @@
+Sub ClassificarUltimasSubtarefas()
+    Dim t As Task
+    Dim parentTask As Task
+    
+    For Each t In ActiveProject.Tasks
+        If Not t Is Nothing Then
+            ' Verifica se a tarefa é uma última subtarefa
+            If t.OutlineChildren.Count = 0 Then
+                ' Encontra a tarefa pai de nível 3
+                Set parentTask = t.OutlineParent
+                ' Verifica se o pai está em nível 3
+                While Not parentTask Is Nothing And parentTask.OutlineLevel <> 3
+                    Set parentTask = parentTask.OutlineParent
+                Wend
+                
+                If Not parentTask Is Nothing And parentTask.OutlineLevel = 3 Then
+                    ' Classifica a última subtarefa com base na tarefa de nível 3 pai
+                    Select Case parentTask.Name
+                        Case "Inicialização"
+                            t.Text2 = "Inicialização"
+                        Case "Planejamento"
+                            t.Text2 = "Planejamento"
+                        Case "Execução"
+                            t.Text2 = "Execução"
+                        Case "Comissionamento"
+                            t.Text2 = "Comissionamento"
+                        Case "Startup"
+                            t.Text2 = "Startup"
+                        Case "Encerramento"
+                            t.Text2 = "Encerramento"
+                        Case Else
+                            t.Text2 = ""
+                    End Select
+                Else
+                    t.Text2 = ""
+                End If
+            End If
+        End If
+    Next t
+End Sub
